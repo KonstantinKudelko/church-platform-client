@@ -1,0 +1,9 @@
+.content {
+  @apply h-full overflow-x-hidden pr-5 relative z-10 pb-5;
+  @include media-breakpoint-down(xl) {
+    @apply ml-0 px-4 max-w-full;
+  }
+  @include media-breakpoint-down(sm) {
+    @apply px-3;
+  }
+}

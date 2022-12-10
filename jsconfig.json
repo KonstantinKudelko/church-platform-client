@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/api/*": ["src/api/*"],
+      "@/pages/*": ["src/pages/*"],
+      "@/helpers/*": ["src/helpers/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/stores/*": ["src/stores/*"],
+      "@/constants": ["src/constants/index.js"],
+      "@/components/*": ["src/components/*"]
+    }
+  },
+  "exclude": ["./node_modules"]
+}

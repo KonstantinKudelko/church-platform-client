@@ -1,0 +1,26 @@
+html {
+  &:before {
+    content: "";
+    @apply absolute inset-0 z-[-2] bg-cover grayscale xl:bg-[url("../../images/bg-main.jpg")] bg-no-repeat;
+  }
+  &:after {
+    content: "";
+    @apply absolute inset-0 z-[-1] bg-slate-100 xl:bg-primary/30;
+  }
+  &.dark {
+    &:after {
+      @apply bg-darkmode-700 xl:bg-primary/30;
+    }
+    body {
+      @apply text-slate-300;
+      *,
+      ::before,
+      ::after {
+        @apply border-white/5;
+      }
+    }
+  }
+  body {
+    @apply antialiased font-roboto text-sm text-slate-700;
+  }
+}

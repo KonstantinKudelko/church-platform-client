@@ -1,0 +1,22 @@
+.wrapper {
+  @apply min-w-0 relative flex-1;
+  &:before {
+    content: "";
+    @apply hidden xl:block inset-0 mr-5 absolute bg-gradient-to-b from-slate-100/90 to-white/80 backdrop-blur-md rounded-r-xl dark:from-darkmode-800/80 dark:to-darkmode-700/90;
+  }
+  &:after {
+    content: "";
+    box-shadow: 0 3px 15px rgb(0 0 0 / 7%);
+    @apply hidden xl:block bg-slate-50/[0.70] inset-0 absolute rounded-xl mr-5 dark:bg-darkmode-700/[0.9];
+  }
+  &.wrapper--simple {
+    margin-left: 112px;
+    @apply pl-0;
+    @include media-breakpoint-down(xl) {
+      @apply ml-0 px-4;
+    }
+    @include media-breakpoint-down(sm) {
+      @apply px-3;
+    }
+  }
+}
