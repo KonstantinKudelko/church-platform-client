@@ -5,9 +5,9 @@ export const menuAtom = atom({
   key: "menu",
   default: {
     ADMIN_MENU: [
-      "Menu",
+      "Clients",
       {
-        icon: "MessageCircle",
+        icon: "Briefcase",
         title: "Home",
         pathname: "/home",
       },

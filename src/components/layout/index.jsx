@@ -1,28 +1,22 @@
 import dom from "@left4code/tw-starter/dist/js/dom";
 import SimpleBar from "simplebar";
 import classnames from "classnames";
+import { Icon } from "@/components";
 import { Transition } from "react-transition-group";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { userAtom } from "@/stores/user";
 import { menuSelector } from "@/stores/menu";
+import { useRecoilValue } from "recoil";
+import { useMessagesCounter } from "@/api/messages";
+import { socket, queryClient } from "@/app";
 import { useState, useEffect } from "react";
+import { MENU_TITLES, MESSAGE_STATUSES } from "@/constants";
 import { useCallbackState, helper as $h } from "@/utils";
 import { linkTo, nestedMenu, enter, leave } from "./layout.helper";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import {
-  Icon,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  DropdownContent,
-} from "@/components";
 
 export const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const user = useRecoilValue(userAtom);
-  const setUser = useSetRecoilState(userAtom);
+  const messagesCounter = useMessagesCounter();
   const [formattedMenu, setFormattedMenu] = useState([]);
   const sideMenuStore = useRecoilValue(menuSelector);
   const sideMenu = () => nestedMenu($h.toRaw(sideMenuStore.menu), location);
@@ -57,18 +51,31 @@ export const Layout = () => {
     setMobileMenu(!mobileMenu);
   };
 
-  const onLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate("/login");
-  };
-
   useEffect(() => {
     dom("body").removeClass("error-page").removeClass("login").addClass("main");
     new SimpleBar(dom(".side-nav .scrollable")[0]);
     new SimpleBar(dom(".content")[0]);
     setFormattedMenu(sideMenu());
   }, [sideMenuStore, location.pathname]);
+
+  useEffect(() => {
+    socket.on("request", (request) => {
+      queryClient.invalidateQueries(["messages-count"]);
+
+      queryClient.setQueryData(["messages", MESSAGE_STATUSES.DRAFT], (requests) => {
+        return [request, ...requests];
+      });
+    });
+
+    socket.on("message", () => {
+      queryClient.invalidateQueries(["messages-count"]);
+    });
+
+    return () => {
+      socket.off("request");
+      socket.off("message");
+    };
+  }, []);
 
   return (
     <div className="xl:pl-5 xl:py-5 flex h-screen">
@@ -84,9 +91,7 @@ export const Layout = () => {
         <div className="pt-4 mb-4">
           <div className="side-nav__header flex items-center">
             <Link to="/" className="intro-x flex items-center">
-              <span className="side-nav__header__text pt-0.5 text-lg ml-2.5">
-                Church Client Platform
-              </span>
+              <span className="side-nav__header__text pt-0.5 text-lg ml-2.5">Client Platform</span>
             </Link>
             <a
               href="#"
@@ -143,6 +148,14 @@ export const Layout = () => {
                         </div>
                       )}
                     </div>
+
+                    {menu.title === MENU_TITLES.REQUESTS && messagesCounter.data?.requests > 0 && (
+                      <div className="side-menu__counter">{messagesCounter.data?.requests}</div>
+                    )}
+
+                    {menu.title === MENU_TITLES.CHATS && messagesCounter.data?.unreadChats > 0 && (
+                      <div className="side-menu__counter">{messagesCounter.data?.unreadChats}</div>
+                    )}
                   </a>
                   {/* BEGIN: Second Child */}
                   {menu.subMenu && (
@@ -236,29 +249,6 @@ export const Layout = () => {
             )}
             {/* END: First Child */}
           </ul>
-        </div>
-
-        <div className="flex py-6 pl-4">
-          <Dropdown className="intro-x h-12" placement="top-start">
-            <DropdownToggle
-              tag="div"
-              role="button"
-              className="h-full dropdown-toggle flex items-center"
-            >
-              <Icon icon="User" className="w-8 h-8 image-fit" />
-
-              <div className="hidden md:block ml-1">
-                <div className="max-w-[7rem] truncate font-medium">{user.username}</div>
-              </div>
-            </DropdownToggle>
-            <DropdownMenu className="w-56">
-              <DropdownContent>
-                <DropdownItem onClick={() => onLogout()}>
-                  <Icon icon="ToggleRight" className="w-4 h-4 mr-2" /> Logout
-                </DropdownItem>
-              </DropdownContent>
-            </DropdownMenu>
-          </Dropdown>
         </div>
       </nav>
       {/* END: Side Menu */}
