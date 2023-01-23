@@ -1,6 +1,6 @@
+import { Home } from "@/pages";
 import { Layout } from "@/components";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Home } from "@/pages";
 
 export const Router = () => {
   return (

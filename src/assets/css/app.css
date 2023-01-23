@@ -84,11 +84,6 @@
 @import "@left4code/tw-starter/dist/css/_zoom-in.css";
 @import "@left4code/tw-starter/dist/css/_box.css";
 @import "simplebar/src/simplebar.css";
-@import "react-toastify/dist/ReactToastify.css";
-@import "tippy.js/dist/tippy.css";
-@import "tippy.js/themes/light.css";
-@import "tippy.js/dist/svg-arrow.css";
-@import "tippy.js/animations/shift-away.css";
 
 /*
  |--------------------------------------------------------------------------
@@ -100,10 +95,5 @@
  */
 @import "./components/_global.css";
 @import "./components/_wrapper.css";
-@import "./components/_box.css";
-@import "./components/_content.css";
 @import "./components/_icon.css";
 @import "./components/_side-nav.css";
-@import "./components/_datepicker.css";
-@import "./components/_dropdown.css";
-@import "./components/_tippy.css";
